@@ -1,0 +1,22 @@
+.colorful-title {
+    background-image: linear-gradient(to right, #5865F2, #EB459E, #57F287, #FEE75C, #ED4245);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    text-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
+    animation: title-shimmer 5s infinite linear;
+}
+
+@keyframes title-shimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

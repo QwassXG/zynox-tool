@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Discord Token Analysis Tool</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        .success-container {
+            text-align: center;
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            background: rgba(54, 57, 63, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .home-btn {
+            margin-top: 2rem;
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--discord-blue);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="container">
+        <div class="success-container float-element">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1>Payment Successful!</h1>
+            <p>Thank you for your purchase. Your order has been processed successfully.</p>
+            <p>You will receive a confirmation email shortly with your order details.</p>
+            <a href="/" class="home-btn">
+                <i class="fas fa-home"></i> Return to Homepage
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/animation.js') }}"></script>
+</body>
+</html>

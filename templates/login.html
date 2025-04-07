@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Discord Token Analysis Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Login specific styles */
+        body {
+            overflow: hidden;
+            background-color: #202225;
+        }
+
+        .login-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .login-card {
+            position: relative;
+            width: 420px;
+            padding: 40px 30px;
+            background: rgba(54, 57, 63, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            
+            
+            z-index: 10;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #5865F2, #EB459E, #57F287);
+            border-radius: 16px;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.7;
+            animation: glowAnimation 8s linear infinite;
+        }
+
+        @keyframes glowAnimation {
+            0% { filter: blur(10px); opacity: 0.7; }
+            50% { filter: blur(20px); opacity: 0.9; }
+            100% { filter: blur(10px); opacity: 0.7; }
+        }
+
+        .login-card h1 {
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(88, 101, 242, 0.8);
+        }
+
+        .login-form .form-group {
+            margin-bottom: 25px;
+        }
+
+        .login-form .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .login-form .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(32, 34, 37, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-form .form-group input:focus {
+            border-color: #5865F2;
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #5865F2, #EB459E);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(90deg, #4752c4, #d33b8a);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .login-error {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(237, 66, 69, 0.2);
+            border-left: 4px solid #ED4245;
+            border-radius: 4px;
+            color: #ffffff;
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #c2c2c2;
+            font-size: 0.9rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #5865F2;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+
+        /* Flash messages */
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .flash-message {
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        .flash-message.info {
+            background-color: #5865F2;
+        }
+
+        .flash-message.error {
+            background-color: #ED4245;
+        }
+
+        .flash-message.success {
+            background-color: #57F287;
+        }
+
+        .flash-message i {
+            margin-right: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Container for 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Loading Screen (initially hidden) -->
+    <div id="loading-screen" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Flash Messages Container -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {% if category == 'info' %}
+                            <i class="fas fa-info-circle"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% elif category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Discord Token Analysis Tool</h1>
+            
+            {% if error %}
+            <div class="login-error">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            <form class="login-form" method="post" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>© 2025 Discord Token Analysis Tool</p>
+                
+                <div class="social-icons">
+                    {% for link in social_links %}
+                    <a href="{{ link.url }}" target="_blank" title="{{ link.name }}">
+                        <i class="fab fa-{{ link.icon }}"></i>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/animation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+    
+    <!-- Simple Animation Effect -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.login-card');
+            
+            // Add simple floating animation to the login card
+            let floatY = 0;
+            let floatDirection = 1;
+            
+            function animateCard() {
+                floatY += 0.05 * floatDirection;
+                
+                // Reverse direction when reaching limits
+                if (floatY > 5 || floatY < -5) {
+                    floatDirection *= -1;
+                }
+                
+                card.style.transform = `translateY(${floatY}px)`;
+                requestAnimationFrame(animateCard);
+            }
+            
+            // Start animation
+            animateCard();
+            
+            // Flash message auto-hide
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

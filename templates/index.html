@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zynox Website Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Canvas Container for 3D Background -->
+    <div id="canvas-container"></div>
+    <!-- Loading Screen (initially hidden) -->
+    <div id="loading-screen" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Flash Messages Container -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {% if category == "info" %}
+                            <i class="fas fa-info-circle"></i>
+                        {% elif category == "error" %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% elif category == "success" %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+    <!-- Loading Screen (initially hidden) -->
+    <div id="loading-screen" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+    
+    <!-- Flash Messages Container -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {% if category == 'info' %}
+                            <i class="fas fa-info-circle"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% elif category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="float-element colorful-title">Zynox Website Tools</h1>
+            <p>Validate Discord tokens and access account information with our advanced token checker and combo formatter</p>
+        </header>
+        
+        <!-- Main Feature Buttons -->
+        <div class="main-buttons">
+            <a href="#token-checker" id="token-btn" class="main-btn">
+                <i class="fas fa-shield-alt"></i> Token Checker
+            </a>
+            <a href="#combo-formatter" id="combo-btn" class="main-btn">
+                <i class="fas fa-file-code"></i> Token Formatter
+            </a>
+            <a href="#promo-checker" id="promo-btn" class="main-btn">
+                <i class="fas fa-gift"></i> Promo Checker
+            </a>
+        </div>
+        
+        <!-- Token Checker Section -->
+        <div id="token-checker" class="card section">
+            <h2 class="card-title"><i class="fas fa-shield-alt"></i> Token Checker</h2>
+            <div class="form-group">
+                <label for="token-input" class="form-label">Enter Discord Tokens (one per line)</label>
+                <textarea id="token-input" class="form-control" placeholder="Enter tokens here..."></textarea>
+            </div>
+            <div class="button-group">
+                <button id="validate-tokens-btn" class="btn btn-primary animate-btn">
+                    <i class="fas fa-check-circle"></i> Validate Tokens
+                </button>
+                <button id="clear-tokens-btn" class="btn btn-secondary">
+                    <i class="fas fa-trash-alt"></i> Clear
+                </button>
+            </div>
+            
+            <!-- Results Container -->
+            <div id="token-results" class="result-container">
+                <div class="results-summary">
+                    Validated <span id="valid-count" class="verified">0</span> tokens out of <span id="total-count">0</span>
+                </div>
+                <div id="token-cards" class="token-results">
+                    <!-- Token cards will be added here by JavaScript -->
+                </div>
+                
+                <!-- Copy All Valid Tokens Button -->
+                <div class="copy-valid-container">
+                    <button id="copy-valid-tokens" class="btn btn-success">
+                        <i class="fas fa-copy"></i> Copy All Valid Tokens
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div id="token-loader" class="loader"></div>
+        </div>
+        
+        <!-- Combo Formatter Section -->
+        <div id="combo-formatter" class="card section">
+            <h2 class="card-title"><i class="fas fa-file-code"></i> Combo Formatter</h2>
+            <div class="form-group">
+                <label for="combo-input" class="form-label">Enter email:pass:token Combos </label>
+                <textarea id="combo-input" class="form-control" placeholder="Enter combos here in format email:pass:token"></textarea>
+            </div>
+            <div class="button-group">
+                <button id="format-combo-btn" class="btn btn-primary animate-btn">
+                    <i class="fas fa-code"></i> Format Combo
+                </button>
+                <button id="clear-combo-btn" class="btn btn-secondary">
+                    <i class="fas fa-trash-alt"></i> Clear
+                </button>
+            </div>
+            
+            <!-- Formatted Results -->
+            <div id="combo-results" class="result-container">
+                <!-- Tokens Result -->
+                <div class="formatted-group">
+                    <h3>
+                        <i class="fas fa-key"></i> Tokens <span id="tokens-count" class="count-badge">0</span>
+                    </h3>
+                    <div id="tokens-list" class="result-box"></div>
+                    <button id="tokens-copy-btn" class="btn btn-secondary">
+                        <i class="fas fa-copy"></i> Copy Tokens
+                    </button>
+                </div>
+                
+                <!-- Email:Pass Result -->
+                <div class="formatted-group">
+                    <h3>
+                        <i class="fas fa-envelope"></i> Email:Pass <span id="combo-count" class="count-badge">0</span>
+                    </h3>
+                    <div id="email-pass-list" class="result-box"></div>
+                    <button id="email-pass-copy-btn" class="btn btn-secondary">
+                        <i class="fas fa-copy"></i> Copy Email:Pass
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div id="combo-loader" class="loader"></div>
+        </div>
+        
+        <!-- Nitro Promo Checker Section -->
+        <div id="promo-checker" class="card section">
+            <h2 class="card-title"><i class="fas fa-gift"></i> Promo Checker</h2>
+            <div class="form-group">
+                <label for="promo-input" class="form-label">Enter Discord Nitro Promo Links </label>
+                <textarea id="promo-input" class="form-control" placeholder="Enter promo links like https://discord.gift/abcdef..."></textarea>
+            </div>
+            <div class="button-group">
+                <button id="validate-promos-btn" class="btn btn-nitro animate-btn">
+                    <i class="fas fa-check-circle"></i> Check Promos
+                </button>
+                <button id="clear-promos-btn" class="btn btn-secondary">
+                    <i class="fas fa-trash-alt"></i> Clear
+                </button>
+            </div>
+            
+            <!-- Promo Results -->
+            <div id="promo-results" class="result-container">
+                <div class="results-summary">
+                    Found <span id="promo-valid-count" class="verified">0</span> valid promos out of <span id="promo-total-count">0</span>
+                </div>
+                <div id="promo-cards">
+                    <!-- Promo cards will be added here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div id="promo-loader" class="loader"></div>
+        </div>
+        
+        <!-- Discord Links Section -->
+        <div class="discord-links-container">
+            <h3 class="section-title glow colorful-title">Discord Links</h3>
+            <div class="discord-links">
+                {% for link in discord_links %}
+                <a href="{{ link.url }}" target="_blank" class="discord-link-btn">
+                    {% if link.name == 'Discord' %}
+                    <i class="fab fa-discord"></i>
+                    <span style="color: white;">Contact Discord</span>
+                    {% elif link.name == 'Store Link' %}
+                    <i class="fas fa-store"></i>
+                    Store Link
+                    {% elif link.name == 'YouTube' %}
+                    <i class="fab fa-youtube"></i>
+                    {{ link.name }}
+                    {% else %}
+                    {% if link.icon %}
+                    <i class="fas fa-{{ link.icon }}"></i>
+                    {% else %}
+                    <i class="fab fa-discord"></i>
+                    {% endif %}
+                    {{ link.name }}
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Autobuy Products Section -->
+        <div class="autobuy-container">
+            <h3 class="section-title glow">Autobuy Products</h3>
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-{{ product.icon }}"></i>
+                    </div>
+                    <h4 class="product-name">{{ product.name }}</h4>
+                    <p class="product-price">{{ product.price }}</p>
+                    <button class="purchase-btn" data-product-id="{{ product.id }}">
+                        <i class="fas fa-shopping-cart"></i> Purchase
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Logout Button -->
+        <div class="logout-container">
+            <a href="{{ url_for('logout') }}" class="logout-btn-bottom">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="social-links">
+                {% if social_links %}
+                {% for social in social_links %}
+                <a href="{{ social.url }}" target="_blank" class="tooltip">
+                    <i class="fab fa-{{ social.icon }}"></i>
+                    <span class="tooltip-text">{{ social.name }}</span>
+                </a>
+                {% endfor %}
+                {% else %}
+                <a href="#" class="tooltip">
+                    <i class="fab fa-discord"></i>
+                    <span class="tooltip-text">Discord</span>
+                </a>
+                <a href="#" class="tooltip">
+                    <i class="fab fa-github"></i>
+                    <span class="tooltip-text">GitHub</span>
+                </a>
+                <a href="#" class="tooltip">
+                    <i class="fab fa-telegram"></i>
+                    <span class="tooltip-text">Telegram</span>
+                </a>
+                {% endif %}
+            </div>
+            <p>&copy; 2025 Discord Token Analysis Tool. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <!-- Notification Element -->
+    <div id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-message"></span>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/token_validator.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/combo_formatter.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/promo_checker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autobuy.js') }}"></script>
+</body>
+</html>

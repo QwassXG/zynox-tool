@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Canceled - Discord Token Analysis Tool</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        .cancel-container {
+            text-align: center;
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            background: rgba(54, 57, 63, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cancel-icon {
+            font-size: 5rem;
+            color: var(--error-red);
+            margin-bottom: 2rem;
+            animation: shake 1s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .home-btn {
+            margin-top: 2rem;
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--discord-blue);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
+        }
+        
+        .try-again-btn {
+            margin-top: 1rem;
+            margin-left: 1rem;
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--discord-dark);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .try-again-btn:hover {
+            background-color: #2f3136;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="container">
+        <div class="cancel-container float-element">
+            <i class="fas fa-times-circle cancel-icon"></i>
+            <h1>Payment Canceled</h1>
+            <p>Your payment was not completed. No charges were made to your account.</p>
+            <p>If you experienced any issues during the payment process, please try again or contact our support team.</p>
+            <div>
+                <a href="/" class="home-btn">
+                    <i class="fas fa-home"></i> Return to Homepage
+                </a>
+                <a href="javascript:history.back()" class="try-again-btn">
+                    <i class="fas fa-redo"></i> Try Again
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/animation.js') }}"></script>
+</body>
+</html>
